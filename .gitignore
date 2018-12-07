@@ -17,6 +17,8 @@ garbageCan/*
 *log*
 scratch/
 
+test_architecture/experiment*
+cifar10_estimator/experiment*
 .ipynb_checkpoints
 *.egg-info/
 build/

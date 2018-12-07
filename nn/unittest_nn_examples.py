@@ -12,12 +12,12 @@ import os
 from utils.base_test_class import BaseTestClass, execute_tests
 from nn import nn_examples
 from nn.nn_visualise import visualise_list_of_nns, visualise_nn
-from demos.model_convert import ConvNNdataNetCifar10    #test for the network cast
-from demos.model_cast import model_cast
+# from demos.model_convert import ConvNNdataNetCifar10    #test for the network cast
+# from demos.model_cast import model_cast
 
-from multiprocessing import Process, Manager
-import Queue
-import time
+# from multiprocessing import Process, Manager
+# import Queue
+# import time
 
 def for_test():
   x = 12
@@ -47,32 +47,32 @@ class NNExamplesTestCase(BaseTestClass):
     save_file_prefix = os.path.join(self.save_dir, "vgg-16")
     visualise_nn(vggnet2, save_file_prefix)
 
-  def test_vgg_chen(self):
-    self.report('Testing the vgg_net_chen. ')
-    NN_PERFORMANCE = []
+  # def test_vgg_chen(self):
+  #   self.report('Testing the vgg_net_chen. ')
+  #   NN_PERFORMANCE = []
 
-    vgg_net_chen = nn_examples.get_vgg_net_chen(3)
-    save_file_prefix = os.path.join(self.save_dir, "vgg-chen")
-    manager = Manager()
-    return_dict = manager.dict()
-    model_cast_cifar10 = ConvNNdataNetCifar10(vgg_net_chen)
-    NN_dataflow_work = model_cast_cifar10.forward_pass()
+  #   vgg_net_chen = nn_examples.get_vgg_net_chen(3)
+  #   save_file_prefix = os.path.join(self.save_dir, "vgg-chen")
+  #   manager = Manager()
+  #   return_dict = manager.dict()
+  #   model_cast_cifar10 = ConvNNdataNetCifar10(vgg_net_chen)
+  #   NN_dataflow_work = model_cast_cifar10.forward_pass()
     
-    p = Process(target=model_cast,args=(NN_dataflow_work,return_dict))
-    p.start()
-    t1 = time.time()
-    print("time-1:",t1)
-    for_test()
-    t2 = time.time()
-    print("time-2:",t2-t1)
-    p.join()
-    NN_PERFORMANCE.append(return_dict['total_cost'])
-    t3 = time.time()
-    print("time-3:",t3-t1)
-    with open("../result/performance.txt",'w+') as f:
-          f.write(str(NN_PERFORMANCE))
-          f.write("\n")
-          f.close()
+  #   p = Process(target=model_cast,args=(NN_dataflow_work,return_dict))
+  #   p.start()
+  #   t1 = time.time()
+  #   print("time-1:",t1)
+  #   for_test()
+  #   t2 = time.time()
+  #   print("time-2:",t2-t1)
+  #   p.join()
+  #   NN_PERFORMANCE.append(return_dict['total_cost'])
+  #   t3 = time.time()
+  #   print("time-3:",t3-t1)
+  #   with open("../result/performance.txt",'w+') as f:
+  #         f.write(str(NN_PERFORMANCE))
+  #         f.write("\n")
+  #         f.close()
     #print(return_dict)
 
     #visualise_nn(vgg_net_chen, save_file_prefix)
