@@ -19,15 +19,15 @@ from nn.nn_examples import get_vgg_net
 def parse_arg():
   parser = argparse.ArgumentParser()
   parser.add_argument('--data-dir',default="../data/cifar10",type=str, help='The directory where the CIFAR-10 input data is stored.')
-  parser.add_argument('--job-dir', type=str, default='{}-{}'.format("experiment", time.strftime("%Y%m%d-%H%M%S")),help='The directory where the model will be stored.')
+  parser.add_argument('--job-dir', type=str, default='experiment-20181217-163742',help='The directory where the model will be stored.') #default='{}-{}'.format("experiment", time.strftime("%Y%m%d-%H%M%S"))
   parser.add_argument('--variable-strategy', choices=['CPU', 'GPU'],type=str,default='GPU', help='Where to locate variable operations')
   parser.add_argument('--num-gpus',type=int, default=2, help='The number of gpus used. Uses only CPU if set to 0.')
   parser.add_argument('--train-steps', type=int,default=80000, help='The number of steps to use for training.')
-  parser.add_argument('--train-batch-size',type=int,default=128, help='Batch size for training.')
+  parser.add_argument('--train-batch-size',type=int,default=32, help='Batch size for training.')
   parser.add_argument('--eval-batch-size',type=int, default=100, help='Batch size for validation.')
   parser.add_argument('--momentum',type=float, default=0.9,help='Momentum for MomentumOptimizer.')
   parser.add_argument('--weight-decay', type=float, default=2e-4,help='Weight decay for convolutions.')
-  parser.add_argument('--learning-rate',type=float, default=0.01, help="""\
+  parser.add_argument('--learning-rate',type=float, default=0.005, help="""\
       This is the inital learning rate value. The learning rate will decrease
       during training. For more details check the model_fn implementation in
       this file.\

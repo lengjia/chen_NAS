@@ -109,7 +109,7 @@ class ConvNet(object):
 
   def _myFullyConnected(self, x, out_dim):
     x = tf.layers.dense(x, out_dim)
-    x = self._relu(x)
+    #x = self._relu(x)
     return x
 
   def _fully_connected_layer(self, x, out_dim):
@@ -126,6 +126,7 @@ class ConvNet(object):
       if x.get_shape().ndims == 4:
         x = self._myGlobalAvgPool(x) # Flatten
       x = self._myFullyConnected(x,num_units) # With the tf.argmax/tf.softmax in cifar10_main._tower_fn, this should be softmax layer
+      x = tf.nn.softmax(x)
     tf.logging.info('image after unit %s: %s', name_scope, x.get_shape())
     return x
 

@@ -25,12 +25,12 @@ def get_nn():
 def get_default_cnn_tf_params():
   """ Default MLP training parameters for tensorflow. """
   return {
-    'trainBatchSize':128,
+    'trainBatchSize':32,
     'valiBatchSize':100,
-    'trainNumStepsPerLoop':400, #original 4000
-    'valiNumStepsPerLoop':30, #original 313
+    'trainNumStepsPerLoop':8000, #original 4000
+    'valiNumStepsPerLoop':50, #original 313
     'numLoops':10, #original 20
-    'learningRate':0.005
+    'learningRate':0.01
     }
 
 def compute_validation_error(nn,data_dir,gpu_id,params,tmp_dir):
@@ -77,7 +77,7 @@ def compute_validation_error(nn,data_dir,gpu_id,params,tmp_dir):
   vali_input_fn = functools.partial(
       cifar10_myMain.input_fn,
       data_dir,
-      subset='eval',
+      subset='validation',
       batch_size=params['valiBatchSize'],
       num_shards=num_gpus)
 
