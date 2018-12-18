@@ -25,7 +25,6 @@ build/
 dist/
 scratch/
 .idea/
-data/
 .DS_Store
 demos/cnn_experiment_dir*/
 result/
