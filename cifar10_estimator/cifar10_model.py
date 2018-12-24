@@ -55,24 +55,65 @@ class ResNetCifar10(model_base.ResNet):
     # Image standardization.
     x = x / 128 - 1
 
-    x = self._conv(x, 3, 16, 1)
+    x = self._conv(x, 3, 64, 1)
     x = self._batch_norm(x)
     x = self._relu(x)
 
-    # Use basic (non-bottleneck) block and ResNet V1 (post-activation).
-    res_func = self._residual_v1
+    x = self._conv(x, 3, 64, 1)
+    x = self._batch_norm(x)
+    x = self._relu(x)
 
-    # 3 stages of block stacking.
-    for i in range(3):
-      with tf.name_scope('stage'):
-        for j in range(self.n):
-          if j == 0:
-            # First block in a stage, filters and strides may change.
-            x = res_func(x, 3, self.filters[i], self.filters[i + 1],
-                         self.strides[i])
-          else:
-            # Following blocks in a stage, constant filters and unit stride.
-            x = res_func(x, 3, self.filters[i + 1], self.filters[i + 1], 1)
+    x = self._avg_pool(x,3,1)
+
+    x = self._conv(x, 3, 128, 1)
+    x = self._batch_norm(x)
+    x = self._relu(x)
+
+    x = self._conv(x, 3, 128, 1)
+    x = self._batch_norm(x)
+    x = self._relu(x)
+
+    x = self._avg_pool(x,3,2)
+
+    x = self._conv(x, 3, 256, 1)
+    x = self._batch_norm(x)
+    x = self._relu(x)
+
+    x = self._conv(x, 3, 256, 1)
+    x = self._batch_norm(x)
+    x = self._relu(x) 
+
+
+    x = self._avg_pool(x,3,2)
+
+    x = self._conv(x, 3, 512, 1)
+    x = self._batch_norm(x)
+    x = self._relu(x)
+
+    x = self._conv(x, 3, 512, 1)
+    x = self._batch_norm(x)
+    x = self._relu(x) 
+
+
+
+
+
+
+
+    # # Use basic (non-bottleneck) block and ResNet V1 (post-activation).
+    # res_func = self._residual_v1
+
+    # # 3 stages of block stacking.
+    # for i in range(3):
+    #   with tf.name_scope('stage'):
+    #     for j in range(self.n):
+    #       if j == 0:
+    #         # First block in a stage, filters and strides may change.
+    #         x = res_func(x, 3, self.filters[i], self.filters[i + 1],
+    #                      self.strides[i])
+    #       else:
+    #         # Following blocks in a stage, constant filters and unit stride.
+    #         x = res_func(x, 3, self.filters[i + 1], self.filters[i + 1], 1)
 
     x = self._global_avg_pool(x)
     x = self._fully_connected(x, self.num_classes)

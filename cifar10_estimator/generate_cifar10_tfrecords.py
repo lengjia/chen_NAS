@@ -111,7 +111,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--data-dir',
       type=str,
-      default='../data/cifar10',
+      default='',
       help='Directory to download and extract CIFAR-10 to.')
 
   args = parser.parse_args()

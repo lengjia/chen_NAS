@@ -408,7 +408,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--num-gpus',
       type=int,
-      default=1,
+      default=2,
       help='The number of gpus used. Uses only CPU if set to 0.')
   parser.add_argument(
       '--num-layers',
@@ -443,7 +443,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--learning-rate',
       type=float,
-      default=0.1,
+      default=0.05,
       help="""\
       This is the inital learning rate value. The learning rate will decrease
       during training. For more details check the model_fn implementation in

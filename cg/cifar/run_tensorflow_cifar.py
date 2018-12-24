@@ -27,9 +27,9 @@ def get_default_cnn_tf_params():
   return {
     'trainBatchSize':32,
     'valiBatchSize':100,
-    'trainNumStepsPerLoop':8000, #original 4000
-    'valiNumStepsPerLoop':50, #original 313
-    'numLoops':10, #original 20
+    'trainNumStepsPerLoop':4000, #original 4000
+    'valiNumStepsPerLoop':313, #original 313
+    'numLoops':20, #original 20
     'learningRate':0.01
     }
 
