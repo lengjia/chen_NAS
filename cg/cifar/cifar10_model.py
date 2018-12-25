@@ -58,8 +58,8 @@ class ConvNetCifar10(ConvNet):
     #   num_incoming_filters - number of filters from parents (after concatenation)
     layerStr = nn.layer_labels[lidx]
     strideVal = nn.strides[lidx]
-    poolSizeVal = 2
-    stridePoolVal = 2
+    poolSizeVal = 3
+    stridePoolVal = 2 if lidx!=3 else 1
     num_filters = nn.num_units_in_each_layer[lidx]
     if num_filters==None: num_filters=1
     if layerStr=='relu':

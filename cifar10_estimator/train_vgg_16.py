@@ -34,7 +34,7 @@ import itertools
 import os
 
 import cifar10
-import cifar10_model
+import vgg_16
 import cifar10_utils
 import numpy as np
 import six
@@ -47,7 +47,7 @@ tf.logging.set_verbosity(tf.logging.INFO)
 def get_model_fn(num_gpus, variable_strategy, num_workers):
   """Returns a function that will build the resnet model."""
 
-  def _resnet_model_fn(features, labels, mode, params):
+  def _vgg16_model_fn(features, labels, mode, params):
     """Resnet model body.
 
     Support single host, one or more GPU training. Parameter distribution can
@@ -102,7 +102,7 @@ def get_model_fn(num_gpus, variable_strategy, num_workers):
             worker_device=worker_device,
             ps_strategy=tf.contrib.training.GreedyLoadBalancingStrategy(
                 num_gpus, tf.contrib.training.byte_size_load_fn))
-      with tf.variable_scope('resnet', reuse=bool(i != 0)):
+      with tf.variable_scope('vgg', reuse=bool(i != 0)):
         with tf.name_scope('tower_%d' % i) as name_scope:
           with tf.device(device_setter):
             loss, gradvars, preds = _tower_fn(
@@ -147,7 +147,7 @@ def get_model_fn(num_gpus, variable_strategy, num_workers):
           'train') // (params.train_batch_size * num_workers)
       boundaries = [
           num_batches_per_epoch * x
-          for x in np.array([82, 123, 300], dtype=np.int64)
+          for x in np.array([40, 80, 120], dtype=np.int64)
       ]
       staged_lr = [params.learning_rate * x for x in [1, 0.1, 0.01, 0.002]]
 
@@ -203,7 +203,7 @@ def get_model_fn(num_gpus, variable_strategy, num_workers):
         training_hooks=train_hooks,
         eval_metric_ops=metrics)
 
-  return _resnet_model_fn
+  return _vgg16_model_fn
 
 
 def _tower_fn(is_training, weight_decay, feature, label, data_format,
@@ -225,8 +225,7 @@ def _tower_fn(is_training, weight_decay, feature, label, data_format,
     predictions.
 
   """
-  model = cifar10_model.ResNetCifar10(
-      num_layers,
+  model = vgg_16.VGG16(
       batch_norm_decay=batch_norm_decay,
       batch_norm_epsilon=batch_norm_epsilon,
       is_training=is_training,
@@ -418,7 +417,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--train-steps',
       type=int,
-      default=80000,
+      default=50000,
       help='The number of steps to use for training.')
   parser.add_argument(
       '--train-batch-size',
@@ -443,7 +442,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--learning-rate',
       type=float,
-      default=0.05,
+      default=0.1,
       help="""\
       This is the inital learning rate value. The learning rate will decrease
       during training. For more details check the model_fn implementation in

@@ -12,26 +12,13 @@ import argparse
 import tensorflow as tf
 import cg.cifar.cifar10_myMain as cifar10_myMain
 
+from opt.nn_opt_utils import get_initial_pool
 
-from nn.nn_examples import get_vgg_net
 
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2' # To remove the tensorflow compilation warnings
 os.environ['TF_SYNC_ON_FINISH'] = '0'
 os.environ['TF_ENABLE_WINOGRAD_NONFUSED'] = '1'
 
-def get_nn():
-  return get_vgg_net()
-
-def get_default_cnn_tf_params():
-  """ Default MLP training parameters for tensorflow. """
-  return {
-    'trainBatchSize':32,
-    'valiBatchSize':100,
-    'trainNumStepsPerLoop':4000, #original 4000
-    'valiNumStepsPerLoop':313, #original 313
-    'numLoops':20, #original 20
-    'learningRate':0.01
-    }
 
 def compute_validation_error(nn,data_dir,gpu_id,params,tmp_dir):
   """ Trains tensorflow neural network and then computes validation error. """
@@ -93,11 +80,3 @@ def compute_validation_error(nn,data_dir,gpu_id,params,tmp_dir):
   print(neg_vali_errors)
 
   return max(neg_vali_errors)
-
-
-if __name__ == '__main__':
-  nn = get_nn()
-  tf_params = get_default_cnn_tf_params()
-  vali_error = compute_validation_error(nn, "../../data/cifar10",
-                      1, tf_params, "./experiment")
-        

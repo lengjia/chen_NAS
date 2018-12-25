@@ -28,21 +28,21 @@ def get_feedforward_adj_mat(num_layers):
     ret[i, i+1] = 1
   return ret
 
-def get_vgg_net(num_conv_layers_per_block=4, cnn_layer_labels=None):
+def get_vgg_net(num_conv_layers_per_block=2, cnn_layer_labels=None):
   """ Returns a VGG net. """
   cnn_layer_labels = cnn_layer_labels if cnn_layer_labels is not None else \
                      get_cnn_layer_labels()
   #print("cnn_layer_labels:",cnn_layer_labels)
-  layer_labels = ['ip', 'conv3', 'conv3', 'max-pool', 'conv3', 'conv3', 'max-pool']
+  layer_labels = ['ip', 'conv3', 'conv3', 'avg-pool', 'conv3', 'conv3', 'avg-pool']
   num_filters_each_layer = [None, 64, 64, None, 128, 128, None]
   # Now create the blocks
-  block_filter_sizes = [128, 256, 512]
+  block_filter_sizes = [256, 512]
   for bfs in block_filter_sizes:
     layer_labels.extend(['conv3' for _ in range(num_conv_layers_per_block)] +
-                        ['max-pool'])
+                        ['avg-pool'])
     num_filters_each_layer.extend([bfs] * num_conv_layers_per_block + [None])
-  layer_labels.extend(['fc', 'fc', 'fc', 'softmax', 'op'])
-  num_filters_each_layer.extend([128, 256, 512, None, None])
+  layer_labels.extend([  'fc', 'softmax', 'op'])
+  num_filters_each_layer.extend([512, None, None])
   #print("layer_labels",layer_labels)
   #print("number_of_lyers",len(layer_labels))
   #print("num_filters_each_layer",num_filters_each_layer)

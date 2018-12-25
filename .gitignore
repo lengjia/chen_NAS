@@ -23,6 +23,7 @@ cifar10_estimator/experiment*
 *.egg-info/
 build/
 dist/
+old_cg/
 scratch/
 .idea/
 .DS_Store

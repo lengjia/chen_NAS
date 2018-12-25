@@ -59,7 +59,6 @@ def _loss_fn(is_training, weight_decay, feature, label, data_format,
   # Loss and grad
   tower_loss_sub = [tf.losses.sparse_softmax_cross_entropy(logits=x,
       labels=label) for x in logits_sub] 
-
   tower_loss = tf.add_n(tower_loss_sub)
   tower_loss = tf.reduce_mean(tower_loss)
   model_params = tf.trainable_variables()
@@ -198,12 +197,12 @@ def get_model_fn(num_gpus, variable_strategy, num_workers, nnObj):
       loss = tf.reduce_mean(tower_losses, name='loss')
 
       examples_sec_hook = cifar10_utils.ExamplesPerSecondHook(
-          params.train_batch_size, every_n_steps=1000)
+          params.train_batch_size, every_n_steps=10)
 
       tensors_to_log = {'learning_rate': learning_rate, 'loss': loss}
 
       logging_hook = tf.train.LoggingTensorHook(
-          tensors=tensors_to_log, every_n_iter=1000)
+          tensors=tensors_to_log, every_n_iter=100)
 
       train_hooks = [logging_hook, examples_sec_hook]
 

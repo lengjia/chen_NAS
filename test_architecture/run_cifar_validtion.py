@@ -19,15 +19,16 @@ from nn.nn_examples import get_vgg_net
 def parse_arg():
   parser = argparse.ArgumentParser()
   parser.add_argument('--data-dir',default="../data/cifar10",type=str, help='The directory where the CIFAR-10 input data is stored.')
-  parser.add_argument('--job-dir', type=str, default='experiment-20181217-163742',help='The directory where the model will be stored.') #default='{}-{}'.format("experiment", time.strftime("%Y%m%d-%H%M%S"))
+  parser.add_argument('--job-dir', type=str, default='./experiment',help='The directory where the model will be stored.') #default='{}-{}'.format("experiment", time.strftime("%Y%m%d-%H%M%S"))
   parser.add_argument('--variable-strategy', choices=['CPU', 'GPU'],type=str,default='GPU', help='Where to locate variable operations')
   parser.add_argument('--num-gpus',type=int, default=2, help='The number of gpus used. Uses only CPU if set to 0.')
-  parser.add_argument('--train-steps', type=int,default=80000, help='The number of steps to use for training.')
-  parser.add_argument('--train-batch-size',type=int,default=32, help='Batch size for training.')
+  parser.add_argument('--train-steps', type=int,default=4000, help='The number of steps to use for training.')
+  parser.add_argument('--train-batch-size',type=int,default=128, help='Batch size for training.')
   parser.add_argument('--eval-batch-size',type=int, default=100, help='Batch size for validation.')
   parser.add_argument('--momentum',type=float, default=0.9,help='Momentum for MomentumOptimizer.')
+  parser.add_argument('--numLoops',type=int, default=20,help='number of the loops for train.')
   parser.add_argument('--weight-decay', type=float, default=2e-4,help='Weight decay for convolutions.')
-  parser.add_argument('--learning-rate',type=float, default=0.005, help="""\
+  parser.add_argument('--learning-rate',type=float, default=0.05, help="""\
       This is the inital learning rate value. The learning rate will decrease
       during training. For more details check the model_fn implementation in
       this file.\
@@ -100,11 +101,11 @@ def get_experiment_fn(data_dir,
     eval_input_fn = functools.partial(
       cifar10_myMain.input_fn,
       data_dir,
-      subset='eval',
+      subset='validation',
       batch_size=hparams.eval_batch_size,
       num_shards=num_gpus)
 
-    num_eval_examples = cifar10.Cifar10DataSet.num_examples_per_epoch('eval')
+    num_eval_examples = cifar10.Cifar10DataSet.num_examples_per_epoch('validation')
     if num_eval_examples % hparams.eval_batch_size != 0:
       raise ValueError(
           'validation set size must be multiple of eval_batch_size')
@@ -114,6 +115,14 @@ def get_experiment_fn(data_dir,
 
     classifier = tf.estimator.Estimator(model_fn,
       config = run_config, params=hparams)
+
+    vail_accuracy=[]
+    for loop in range(hparams.numLoops):
+      classifier.train(train_input_fn,steps=train_steps)
+      vail_accuracy.append(classifier.evaluate(eval_input_fn,steps=eval_steps))
+      print("finished iter:"+str((loop+1)*train_steps))
+    print("accuracy:")
+    print(vail_accuracy)
       
     #Create experiment.
     return tf.contrib.learn.Experiment(

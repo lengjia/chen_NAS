@@ -116,7 +116,7 @@ class ConvNet(object):
     """Wrapper on _myFullyConnected, when fully connected is used by-itself as a layer."""
     with tf.name_scope('fully_connected') as name_scope:
       if x.get_shape().ndims == 4:
-        x = self._myGlobalAvgPool(x) # Flatten
+        x = self._global_avg_pool_layer(x) # Flatten
       x = self._myFullyConnected(x, out_dim)
     tf.logging.info('image after unit %s: %s', name_scope, x.get_shape())
     return x
@@ -126,7 +126,6 @@ class ConvNet(object):
       if x.get_shape().ndims == 4:
         x = self._myGlobalAvgPool(x) # Flatten
       x = self._myFullyConnected(x,num_units) # With the tf.argmax/tf.softmax in cifar10_main._tower_fn, this should be softmax layer
-      x = tf.nn.softmax(x)
     tf.logging.info('image after unit %s: %s', name_scope, x.get_shape())
     return x
 
