@@ -407,7 +407,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--num-gpus',
       type=int,
-      default=2,
+      default=1,
       help='The number of gpus used. Uses only CPU if set to 0.')
   parser.add_argument(
       '--num-layers',

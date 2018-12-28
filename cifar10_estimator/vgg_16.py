@@ -22,14 +22,14 @@ class VGG16(vgg_base.ConvNet):
         x = x/128.0 -1 
         x = self._conv_layer(x,3,64,1)
         x = self._conv_layer(x,3,64,1)
-        x = self._avg_pool_layer(x,3,1)
+        x = self._max_pool_layer(x,3,1)
         x = self._conv_layer(x,3,128,1)
         x = self._conv_layer(x,3,128,1)
-        x = self._avg_pool_layer(x,3,2)
+        x = self._max_pool_layer(x,3,2)
         for bfs in self.block_filter_sizes:
             for i in range(self.block_num):
                 x = self._conv_layer(x,3,bfs,1)
-            x = self._avg_pool_layer(x,3,2)
+            x = self._max_pool_layer(x,3,2)
         #x = self._full_connected_layer(x,512)
         #x = self._full_connected_layer(x,256)
         x = self._full_connected_layer(x,self.num_classes)
